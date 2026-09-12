@@ -16,10 +16,11 @@ export const Sidebar: React.FC = () => {
   };
 
   const menuItems = [
-    { label: 'Dashboard', href: '/', icon: 'dashboard', badge: null, active: true },
+    { label: 'Dashboard', href: '/', icon: 'dashboard', badge: null },
     { label: 'Campaigns', href: '/calendar', icon: 'campaign', badge: '12+' },
     { label: 'Agent Pods', href: '/pipeline', icon: 'smart_toy', badge: '6 Live', isLive: true },
     { label: 'Approval Queue', href: '/approvals', icon: 'fact_check', badge: '4' },
+    { label: 'Event Logs', href: '/logs', icon: 'receipt_long', badge: 'Live', isLive: true },
     { label: 'Analytics', href: '/analytics', icon: 'bar_chart', badge: null },
   ];
 
@@ -87,7 +88,7 @@ export const Sidebar: React.FC = () => {
               </div>
               <nav className="flex flex-col gap-0.5">
                 {menuItems.map((item) => {
-                  const isActive = item.active || pathname === item.href;
+                  const isActive = pathname === item.href;
                   return (
                     <Link
                       key={item.label}
@@ -141,6 +142,14 @@ export const Sidebar: React.FC = () => {
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M9 11l3 3L22 4" />
                             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                          </svg>
+                        ) : item.label === 'Event Logs' ? (
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={isActive ? '#164e32' : '#94a3b8'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" y1="13" x2="8" y2="13" />
+                            <line x1="16" y1="17" x2="8" y2="17" />
+                            <polyline points="10 9 9 9 8 9" />
                           </svg>
                         ) : (
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
