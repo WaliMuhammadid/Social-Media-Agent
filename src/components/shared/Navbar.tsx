@@ -2,124 +2,84 @@
 
 import React from 'react';
 import Link from 'next/link';
-import {
-  Bell,
-  Sliders,
-  Play,
-  Pause,
-  AlertTriangle,
-  FolderGit2,
-  ChevronDown,
-  Sparkles,
-  ShieldCheck,
-  RefreshCw,
-} from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { mockCampaignState } from '@/lib/mockData';
+import { useSidebar } from '@/context/SidebarContext';
 
 export const Navbar: React.FC = () => {
-  const [isPaused, setIsPaused] = React.useState(false);
-  const [isSyncing, setIsSyncing] = React.useState(false);
-
-  const handleTogglePause = () => {
-    setIsPaused((prev) => !prev);
-  };
-
-  const handleSync = () => {
-    setIsSyncing(true);
-    setTimeout(() => setIsSyncing(false), 1200);
-  };
+  const { toggleSidebar } = useSidebar();
 
   return (
-    <header className="h-16 shrink-0 border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-xl px-6 flex items-center justify-between z-20">
-      {/* Left side: Active Campaign Context & Breadcrumbs */}
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
-            <FolderGit2 className="h-4 w-4" />
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-white tracking-tight">
-                {mockCampaignState.title}
-              </span>
-              <Badge size="sm" variant="success" pulse>
-                Active Sprint
-              </Badge>
-            </div>
-            <span className="text-[11px] text-slate-400 font-mono">
-              Campaign ID: {mockCampaignState.id}
-            </span>
-          </div>
-        </div>
+    /*
+      Donezo navbar:
+      - Pure white bg, no backdrop blur, no bottom shadow (just a very light border)
+      - Height 72px
+      - Left: search input (rounded-full, light border, magnifier + ⌘F chip)
+      - Right: mail icon → bell icon (with green dot) → divider → profile (circle photo + name + email)
+    */
+    <header className="h-[72px] flex items-center justify-between px-6 bg-white border-b border-slate-100 sticky top-0 z-40 w-full shrink-0">
 
-        <div className="h-4 w-px bg-slate-800" />
+      {/* Left: mobile toggle + search */}
+      <div className="flex items-center gap-3 flex-1 min-w-0 mr-4">
+        {/* Mobile hamburger */}
+        <button
+          onClick={toggleSidebar}
+          className="p-2 -ml-1 rounded-xl text-slate-500 hover:bg-slate-100 lg:hidden cursor-pointer shrink-0"
+          type="button"
+        >
+          <span className="material-symbols-outlined text-[22px]">menu</span>
+        </button>
 
-        {/* Manager Mode indicator */}
-        <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-900/80 border border-slate-800 text-[11px] text-slate-300">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span>Manager Gate: Strict Brand-Safety</span>
-          <ShieldCheck className="h-3 w-3 text-emerald-400" />
+        {/* Search — Donezo: rounded-full pill, light border, "Search task" placeholder */}
+        <div className="relative w-full max-w-xs hidden sm:block">
+          <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[17px]">search</span>
+          <input
+            type="text"
+            placeholder="Search task"
+            className="w-full h-9 bg-white border border-slate-200 pl-9 pr-14 rounded-full text-[13px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-[#1a5c38]/40 focus:ring-2 focus:ring-[#1a5c38]/10 transition-all"
+          />
+          {/* ⌘F chip — Donezo style: bordered box on right of input */}
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-0.5 border border-slate-200 rounded px-1.5 py-0.5 pointer-events-none">
+            <span className="text-[10px] text-slate-400">⌘</span>
+            <span className="text-[10px] text-slate-400">F</span>
+          </div>
         </div>
       </div>
 
-      {/* Right side: Actions, Approval Alerts & Human-in-the-Loop Profile */}
-      <div className="flex items-center gap-3">
-        {/* Sync / Refresh Agent State button */}
+      {/* Right: icons + profile */}
+      <div className="flex items-center gap-4 shrink-0">
+
+        {/* Mail icon — Donezo: plain icon, no circle background */}
         <button
-          onClick={handleSync}
-          title="Force Pod State Sync"
-          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900 border border-slate-800/60 transition-colors"
+          type="button"
+          className="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+          title="Messages"
         >
-          <RefreshCw
-            className={`h-4 w-4 ${isSyncing ? 'animate-spin text-indigo-400' : ''}`}
-          />
+          <span className="material-symbols-outlined text-[22px]">mail</span>
         </button>
 
-        {/* Pending Approvals quick-action */}
-        <Link href="/approvals">
-          <div className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/15 transition-colors cursor-pointer text-xs font-medium">
-            <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
-            <span>{mockCampaignState.pendingApprovalPosts} Gates Pending</span>
-            <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping absolute -top-0.5 -right-0.5" />
+        {/* Bell icon with green notification dot */}
+        <button
+          type="button"
+          className="relative text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+          title="Notifications"
+        >
+          <span className="material-symbols-outlined text-[22px]">notifications</span>
+          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#1a5c38] ring-2 ring-white"></span>
+        </button>
+
+        {/* Vertical divider */}
+        <div className="h-8 w-px bg-slate-100"></div>
+
+        {/* Profile — Donezo: circle avatar, name bold, email small gray */}
+        <Link href="#profile" className="flex items-center gap-3 cursor-pointer select-none">
+          {/* Memoji Avatar matching Totok Michael in Donezo image */}
+          <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#fde68a] border border-amber-200 flex items-center justify-center text-[20px] shadow-xs">
+            🧔‍♂️
+          </div>
+          <div className="hidden lg:flex flex-col text-left">
+            <span className="text-[13.5px] font-bold text-slate-900 leading-tight">Totok Michael</span>
+            <span className="text-[11px] text-slate-400 leading-tight">tmichael20@mail.com</span>
           </div>
         </Link>
-
-        {/* Autopilot Pause / Resume toggle */}
-        <Button
-          variant={isPaused ? 'primary' : 'secondary'}
-          size="sm"
-          onClick={handleTogglePause}
-          icon={isPaused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
-        >
-          {isPaused ? 'Resume Swarm' : 'Pause Swarm'}
-        </Button>
-
-        {/* Trigger Sprint Quick Action */}
-        <Button
-          variant="primary"
-          size="sm"
-          icon={<Sparkles className="h-3.5 w-3.5 text-indigo-200" />}
-        >
-          New Content Sprint
-        </Button>
-
-        <div className="h-5 w-px bg-slate-800 ml-1" />
-
-        {/* Human Operator Avatar */}
-        <div className="flex items-center gap-2.5 pl-1 cursor-pointer">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-500 p-0.5 shadow-md">
-            <div className="h-full w-full bg-slate-900 rounded-full flex items-center justify-center font-bold text-xs text-indigo-300">
-              HO
-            </div>
-          </div>
-          <div className="hidden xl:flex flex-col text-left">
-            <span className="text-xs font-medium text-slate-200 leading-tight">Human Operator</span>
-            <span className="text-[10px] text-slate-400 leading-tight">Super Admin</span>
-          </div>
-          <ChevronDown className="h-3.5 w-3.5 text-slate-400 hidden xl:block" />
-        </div>
       </div>
     </header>
   );

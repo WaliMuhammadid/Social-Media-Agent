@@ -3,25 +3,15 @@ import { cn } from '@/lib/utils';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   glow?: boolean;
-  glowColor?: 'indigo' | 'emerald' | 'amber' | 'rose' | 'sky';
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, glow = false, glowColor = 'indigo', children, ...props }, ref) => {
-    const glowColors = {
-      indigo: 'hover:border-indigo-500/40 hover:shadow-[0_0_20px_-5px_rgba(99,102,241,0.15)]',
-      emerald: 'hover:border-emerald-500/40 hover:shadow-[0_0_20px_-5px_rgba(16,185,129,0.15)]',
-      amber: 'hover:border-amber-500/40 hover:shadow-[0_0_20px_-5px_rgba(245,158,11,0.15)]',
-      rose: 'hover:border-rose-500/40 hover:shadow-[0_0_20px_-5px_rgba(244,63,94,0.15)]',
-      sky: 'hover:border-sky-500/40 hover:shadow-[0_0_20px_-5px_rgba(14,165,233,0.15)]',
-    };
-
+  ({ className, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn(
-          'rounded-xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-md p-5 text-slate-100 shadow-lg transition-all duration-200',
-          glow && glowColors[glowColor],
+          'rounded-xl border border-gray-200 bg-white p-6 text-gray-900 shadow-xs hover:shadow-md transition-shadow duration-200 overflow-hidden',
           className
         )}
         {...props}
@@ -40,7 +30,7 @@ export const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex items-center justify-between gap-3 pb-3 border-b border-slate-800/60 mb-4', className)}
+    className={cn('flex items-center justify-between gap-4 pb-4 border-b border-gray-100 mb-5 min-w-0', className)}
     {...props}
   />
 ));
@@ -53,7 +43,7 @@ export const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
-    className={cn('text-base font-semibold leading-none tracking-tight text-white flex items-center gap-2', className)}
+    className={cn('text-base font-semibold leading-tight text-gray-900 flex items-center gap-2 min-w-0 truncate', className)}
     {...props}
   />
 ));
@@ -66,7 +56,7 @@ export const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-xs text-slate-400 leading-relaxed', className)}
+    className={cn('text-xs text-gray-500 leading-relaxed min-w-0', className)}
     {...props}
   />
 ));

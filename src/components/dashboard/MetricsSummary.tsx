@@ -1,43 +1,59 @@
 import React from 'react';
-import { TrendingUp, AlertOctagon, ShieldCheck, Cpu } from 'lucide-react';
+import { TrendingUp, AlertOctagon, ShieldCheck, Cpu, ArrowUpRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { mockManagerMetrics } from '@/lib/mockData';
 
 export const MetricsSummary: React.FC = () => {
-  const icons = [
-    { icon: TrendingUp, color: 'text-indigo-400', bg: 'bg-indigo-500/10 border-indigo-500/20' },
-    { icon: AlertOctagon, color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
-    { icon: ShieldCheck, color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
-    { icon: Cpu, color: 'text-sky-400', bg: 'bg-sky-500/10 border-sky-500/20' },
+  const metaThemes = [
+    { icon: TrendingUp, accent: 'bg-blue-50 text-[#0064E0] border-blue-200' },
+    { icon: AlertOctagon, accent: 'bg-amber-50 text-amber-700 border-amber-200' },
+    { icon: ShieldCheck, accent: 'bg-green-50 text-green-700 border-green-200' },
+    { icon: Cpu, accent: 'bg-purple-50 text-purple-700 border-purple-200' },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
       {mockManagerMetrics.map((metric, idx) => {
-        const iconConfig = icons[idx % icons.length];
-        const Icon = iconConfig.icon;
+        const theme = metaThemes[idx % metaThemes.length];
+        const Icon = theme.icon;
 
         return (
-          <Card key={metric.label} glow className="p-4 flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-slate-400">{metric.label}</span>
-              <div className={`p-2 rounded-lg border ${iconConfig.bg} ${iconConfig.color}`}>
-                <Icon className="h-4 w-4" />
-              </div>
-            </div>
+          <Card key={metric.label} className="p-5 flex flex-col justify-between relative overflow-hidden">
+            {/* Subtle blue top border highlight on first/key card */}
+            {idx === 0 && (
+              <div className="absolute top-0 left-0 right-0 h-1 bg-[#0064E0]" />
+            )}
 
-            <div>
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="text-2xl font-bold tracking-tight text-white">{metric.value}</span>
+            <div className="min-w-0">
+              <div className="flex items-center justify-between mb-3 gap-2">
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider truncate">
+                  {metric.label}
+                </span>
+                <div className={`p-2 rounded-lg border ${theme.accent} shrink-0`}>
+                  <Icon className="h-4 w-4" />
+                </div>
+              </div>
+
+              <div className="flex items-baseline gap-2.5 mb-1.5 flex-wrap">
+                <span className="text-2xl font-extrabold text-gray-900 tracking-tight">
+                  {metric.value}
+                </span>
                 <span
-                  className={`text-xs font-semibold ${
-                    metric.isPositive ? 'text-emerald-400' : 'text-amber-400'
+                  className={`text-xs font-bold inline-flex items-center gap-0.5 ${
+                    metric.isPositive ? 'text-green-700' : 'text-amber-700'
                   }`}
                 >
+                  <ArrowUpRight className="h-3 w-3 inline" />
                   {metric.change}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">{metric.subtext}</p>
+            </div>
+
+            <div className="pt-3 border-t border-gray-100 mt-2 flex items-center justify-between text-xs text-gray-500 min-w-0">
+              <span className="truncate">{metric.subtext}</span>
+              <span className="text-[#0064E0] font-medium hover:underline cursor-pointer shrink-0 ml-2">
+                Trend
+              </span>
             </div>
           </Card>
         );

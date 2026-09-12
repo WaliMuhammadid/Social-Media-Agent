@@ -18,7 +18,6 @@ export const Badge: React.FC<BadgeProps> = ({
   className,
   ...props
 }) => {
-  // Resolve variant from status if provided
   let activeVariant = variant;
   let label = children;
 
@@ -26,15 +25,15 @@ export const Badge: React.FC<BadgeProps> = ({
     switch (status) {
       case 'working':
         activeVariant = 'success';
-        label = children || 'Working';
+        label = children || 'Active / Running';
         break;
       case 'waiting_approval':
         activeVariant = 'warning';
-        label = children || 'Review Required';
+        label = children || 'Pending Approval';
         break;
       case 'idle':
         activeVariant = 'info';
-        label = children || 'Idle / Standby';
+        label = children || 'Idle';
         break;
       case 'completed':
         activeVariant = 'purple';
@@ -51,34 +50,35 @@ export const Badge: React.FC<BadgeProps> = ({
     }
   }
 
+  // Enterprise pastel backgrounds with crisp legible text and subtle borders
   const variantStyles = {
-    default: 'bg-slate-800/80 text-slate-300 border-slate-700/60',
-    success: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-    warning: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-    danger: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
-    info: 'bg-sky-500/10 text-sky-400 border-sky-500/30',
-    purple: 'bg-violet-500/10 text-violet-400 border-violet-500/30',
+    default: 'bg-gray-100 text-gray-700 border-gray-200',
+    success: 'bg-emerald-50 text-emerald-800 border-emerald-200/80 font-semibold',
+    warning: 'bg-amber-50 text-amber-800 border-amber-200/80 font-semibold',
+    danger: 'bg-red-50 text-red-800 border-red-200/80 font-semibold',
+    info: 'bg-blue-50 text-blue-700 border-blue-200/80 font-semibold',
+    purple: 'bg-purple-50 text-purple-800 border-purple-200/80 font-semibold',
   };
 
   const dotStyles = {
-    default: 'bg-slate-400',
-    success: 'bg-emerald-400',
-    warning: 'bg-amber-400',
-    danger: 'bg-rose-400',
-    info: 'bg-sky-400',
-    purple: 'bg-violet-400',
+    default: 'bg-gray-500',
+    success: 'bg-emerald-600',
+    warning: 'bg-amber-600',
+    danger: 'bg-red-600',
+    info: 'bg-blue-600',
+    purple: 'bg-purple-600',
   };
 
   const sizeStyles = {
-    sm: 'text-[10px] px-2 py-0.5 gap-1',
-    md: 'text-xs px-2.5 py-1 gap-1.5',
-    lg: 'text-sm px-3 py-1.5 gap-2',
+    sm: 'text-[11px] font-medium px-2 py-0.5 gap-1.5',
+    md: 'text-xs font-medium px-2.5 py-1 gap-1.5',
+    lg: 'text-sm font-medium px-3 py-1.5 gap-2',
   };
 
   return (
     <span
       className={cn(
-        'inline-flex items-center font-medium rounded-full border transition-colors shadow-sm backdrop-blur-sm',
+        'inline-flex items-center rounded-full border transition-colors shadow-2xs',
         variantStyles[activeVariant],
         sizeStyles[size],
         className

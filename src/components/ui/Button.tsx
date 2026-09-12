@@ -11,21 +11,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', icon, children, disabled, ...props }, ref) => {
     const variants = {
       primary:
-        'bg-indigo-600 text-white hover:bg-indigo-500 shadow-sm shadow-indigo-900/30 border border-indigo-500/50 active:scale-[0.98]',
+        'bg-[#0064E0] text-white hover:bg-[#0052b4] shadow-sm active:scale-[0.98] border border-transparent font-medium',
       secondary:
-        'bg-slate-800 text-slate-200 hover:bg-slate-700/80 border border-slate-700/60 active:scale-[0.98]',
+        'bg-gray-100 text-gray-800 hover:bg-gray-200 border border-transparent active:scale-[0.98] font-medium',
       outline:
-        'bg-transparent text-slate-300 border border-slate-700/80 hover:bg-slate-800/60 hover:text-white active:scale-[0.98]',
+        'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 active:scale-[0.98] shadow-sm font-medium',
       ghost:
-        'bg-transparent text-slate-400 hover:text-white hover:bg-slate-800/50',
+        'bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium',
       danger:
-        'bg-rose-600/10 text-rose-400 hover:bg-rose-600/20 border border-rose-500/30 active:scale-[0.98]',
+        'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 active:scale-[0.98] font-medium',
     };
 
     const sizes = {
-      sm: 'h-8 px-2.5 text-xs rounded-lg gap-1.5',
-      md: 'h-9 px-3.5 text-sm rounded-lg gap-2',
-      lg: 'h-10 px-4 text-base rounded-xl gap-2.5',
+      sm: 'h-8 px-3 text-xs rounded-md gap-1.5',
+      md: 'h-9 px-4 text-sm rounded-lg gap-2',
+      lg: 'h-10 px-5 text-sm rounded-lg gap-2.5',
     };
 
     return (
@@ -33,7 +33,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled}
         className={cn(
-          'inline-flex items-center justify-center font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed cursor-pointer',
+          'inline-flex items-center justify-center transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0064E0] disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed cursor-pointer',
           variants[variant],
           sizes[size],
           className
