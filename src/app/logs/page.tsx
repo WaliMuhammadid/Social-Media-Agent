@@ -197,30 +197,30 @@ export default function EventLogsPage() {
         </div>
       </section>
 
-      {/* KPI Highlights Row */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between">
-          <span className="text-[13px] font-medium text-slate-500">Total Mutations Logged</span>
-          <div className="text-[36px] font-bold text-slate-900 leading-none my-2">1,482</div>
-          <span className="text-[11px] text-[#164e32] font-semibold">+68 in last 24 hours</span>
+      {/* KPI Highlights Row — 2 columns on mobile, 4 columns on desktop */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[135px] sm:min-h-[160px] h-auto">
+          <span className="text-[12px] sm:text-[13px] font-medium text-slate-500 leading-tight">Total Mutations</span>
+          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">1,482</div>
+          <span className="text-[10px] sm:text-[11px] text-[#164e32] font-semibold truncate">+68 in 24 hours</span>
         </div>
 
-        <div className="bg-white p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between">
-          <span className="text-[13px] font-medium text-slate-500">Audit Verification Rate</span>
-          <div className="text-[36px] font-bold text-slate-900 leading-none my-2">99.8%</div>
-          <span className="text-[11px] text-[#164e32] font-semibold">Zero schema violations</span>
+        <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[135px] sm:min-h-[160px] h-auto">
+          <span className="text-[12px] sm:text-[13px] font-medium text-slate-500 leading-tight">Audit Rate</span>
+          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">99.8%</div>
+          <span className="text-[10px] sm:text-[11px] text-[#164e32] font-semibold truncate">0 violations</span>
         </div>
 
-        <div className="bg-white p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between">
-          <span className="text-[13px] font-medium text-slate-500">Pending Operator Sign-off</span>
-          <div className="text-[36px] font-bold text-amber-600 leading-none my-2">4</div>
-          <span className="text-[11px] text-amber-700 font-semibold">Creation &amp; Quality Pods</span>
+        <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[135px] sm:min-h-[160px] h-auto">
+          <span className="text-[12px] sm:text-[13px] font-medium text-slate-500 leading-tight">Pending Sign-off</span>
+          <div className="text-[26px] sm:text-[36px] font-bold text-amber-600 leading-none my-1.5 sm:my-2">4</div>
+          <span className="text-[10px] sm:text-[11px] text-amber-700 font-semibold truncate">Operator gate</span>
         </div>
 
-        <div className="bg-white p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between">
-          <span className="text-[13px] font-medium text-slate-500">Active Agent Pods</span>
-          <div className="text-[36px] font-bold text-slate-900 leading-none my-2">6 / 6</div>
-          <span className="text-[11px] text-slate-500 font-medium">All pods telemetry verified</span>
+        <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[135px] sm:min-h-[160px] h-auto">
+          <span className="text-[12px] sm:text-[13px] font-medium text-slate-500 leading-tight">Active Pods</span>
+          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">6 / 6</div>
+          <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate">All telemetry ok</span>
         </div>
       </section>
 

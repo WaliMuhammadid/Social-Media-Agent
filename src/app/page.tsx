@@ -74,84 +74,84 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* 2. 4 STAT CARDS ROW — Exactly matches Donezo Total/Ended/Running/Pending layout */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+      {/* 2. 4 STAT CARDS ROW — 2x2 grid on mobile, 4 columns on desktop */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Card 1: Total Campaigns — Hero Deep Forest Green Card */}
-        <div className="bg-[#164e32] p-4 sm:p-5 rounded-[22px] text-white shadow-sm flex flex-col justify-between min-h-[165px] h-auto relative overflow-hidden">
-          <div className="flex items-start justify-between">
-            <span className="text-[13.5px] sm:text-[14px] font-medium text-white/90">Total Campaigns</span>
+        <div className="bg-[#164e32] p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] text-white shadow-sm flex flex-col justify-between min-h-[140px] sm:min-h-[165px] h-auto relative overflow-hidden">
+          <div className="flex items-start justify-between gap-1">
+            <span className="text-[12px] sm:text-[14px] font-medium text-white/90 leading-tight">Total Campaigns</span>
             {/* White circle with diagonal arrow ↗ */}
-            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 cursor-pointer shadow-xs">
-              <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-white flex items-center justify-center shrink-0 cursor-pointer shadow-xs">
+              <svg width="10" height="10" className="sm:w-[13px] sm:h-[13px]" viewBox="0 0 12 12" fill="none">
                 <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="#164e32" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </div>
 
           <div>
-            <div className="text-[38px] sm:text-[44px] font-bold tracking-tight text-white leading-none mb-2.5 sm:mb-3">24</div>
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/15 text-[11px] sm:text-[11.5px] text-white font-normal">
-              <span className="px-1 py-0.2 rounded bg-white/20 text-[10px] font-bold">5▲</span>
-              <span>+18.4% from last month</span>
+            <div className="text-[28px] sm:text-[38px] lg:text-[44px] font-bold tracking-tight text-white leading-none mb-1.5 sm:mb-3">24</div>
+            <div className="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded-md bg-white/15 text-[9.5px] sm:text-[11.5px] text-white font-normal max-w-full">
+              <span className="px-1 py-0.2 rounded bg-white/20 text-[9px] sm:text-[10px] font-bold shrink-0">5▲</span>
+              <span className="truncate">+18.4% last month</span>
             </div>
           </div>
         </div>
 
         {/* Card 2: Completed Campaigns — Minimal White Card */}
-        <div className="bg-white p-4 sm:p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[165px] h-auto">
-          <div className="flex items-start justify-between">
-            <span className="text-[13.5px] sm:text-[14px] font-medium text-slate-700">Completed Campaigns</span>
-            <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
-              <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+        <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[140px] sm:min-h-[165px] h-auto">
+          <div className="flex items-start justify-between gap-1">
+            <span className="text-[12px] sm:text-[14px] font-medium text-slate-700 leading-tight">Completed</span>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
+              <svg width="10" height="10" className="sm:w-[13px] sm:h-[13px]" viewBox="0 0 12 12" fill="none">
                 <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="#475569" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </div>
 
           <div>
-            <div className="text-[38px] sm:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-2.5 sm:mb-3">10</div>
-            <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-[11.5px] text-slate-400 font-normal">
-              <span className="px-1 py-0.2 rounded border border-slate-200 text-slate-600 text-[10px] font-bold">6▲</span>
-              <span>+12% from last month</span>
+            <div className="text-[28px] sm:text-[38px] lg:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-1.5 sm:mb-3">10</div>
+            <div className="inline-flex items-center gap-1 sm:gap-1.5 text-[9.5px] sm:text-[11.5px] text-slate-400 font-normal max-w-full">
+              <span className="px-1 py-0.2 rounded border border-slate-200 text-slate-600 text-[9px] sm:text-[10px] font-bold shrink-0">6▲</span>
+              <span className="truncate">+12% last month</span>
             </div>
           </div>
         </div>
 
         {/* Card 3: Active Campaigns — Minimal White Card */}
-        <div className="bg-white p-4 sm:p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[165px] h-auto">
-          <div className="flex items-start justify-between">
-            <span className="text-[13.5px] sm:text-[14px] font-medium text-slate-700">Active Campaigns</span>
-            <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
-              <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+        <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[140px] sm:min-h-[165px] h-auto">
+          <div className="flex items-start justify-between gap-1">
+            <span className="text-[12px] sm:text-[14px] font-medium text-slate-700 leading-tight">Active</span>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
+              <svg width="10" height="10" className="sm:w-[13px] sm:h-[13px]" viewBox="0 0 12 12" fill="none">
                 <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="#475569" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </div>
 
           <div>
-            <div className="text-[38px] sm:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-2.5 sm:mb-3">12</div>
-            <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-[11.5px] text-slate-400 font-normal">
-              <span className="px-1 py-0.2 rounded border border-slate-200 text-slate-600 text-[10px] font-bold">2▲</span>
-              <span>In Flight · Day 14/30</span>
+            <div className="text-[28px] sm:text-[38px] lg:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-1.5 sm:mb-3">12</div>
+            <div className="inline-flex items-center gap-1 sm:gap-1.5 text-[9.5px] sm:text-[11.5px] text-slate-400 font-normal max-w-full">
+              <span className="px-1 py-0.2 rounded border border-slate-200 text-slate-600 text-[9px] sm:text-[10px] font-bold shrink-0">2▲</span>
+              <span className="truncate">In Flight · Day 14</span>
             </div>
           </div>
         </div>
 
         {/* Card 4: Pending Approval — Minimal White Card */}
-        <div className="bg-white p-4 sm:p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[165px] h-auto">
-          <div className="flex items-start justify-between">
-            <span className="text-[13.5px] sm:text-[14px] font-medium text-slate-700">Pending Approval</span>
-            <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
-              <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+        <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[140px] sm:min-h-[165px] h-auto">
+          <div className="flex items-start justify-between gap-1">
+            <span className="text-[12px] sm:text-[14px] font-medium text-slate-700 leading-tight">Pending Approval</span>
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
+              <svg width="10" height="10" className="sm:w-[13px] sm:h-[13px]" viewBox="0 0 12 12" fill="none">
                 <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="#475569" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </div>
 
           <div>
-            <div className="text-[38px] sm:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-2.5 sm:mb-3">4</div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/70 text-[11px] font-medium">
-              Action Required
+            <div className="text-[28px] sm:text-[38px] lg:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-1.5 sm:mb-3">4</div>
+            <div className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/70 text-[9.5px] sm:text-[11px] font-medium max-w-full">
+              <span className="truncate">Action Required</span>
             </div>
           </div>
         </div>
