@@ -47,19 +47,19 @@ export default function DashboardPage() {
       {/* 1. TOP HEADER — Exactly matches Donezo reference */}
       <section className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-[34px] sm:text-[38px] font-bold text-slate-900 tracking-tight leading-tight">
+          <h1 className="text-[30px] sm:text-[36px] md:text-[38px] font-bold text-slate-900 tracking-tight leading-tight">
             Dashboard
           </h1>
-          <p className="text-[14px] text-slate-400 font-normal">
+          <p className="text-[13px] sm:text-[14px] text-slate-400 font-normal">
             Plan, prioritize, and orchestrate autonomous social operations with ease.
           </p>
         </div>
 
         {/* Top Right Action Buttons */}
-        <div className="flex items-center gap-3 shrink-0 pt-1">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 shrink-0 pt-1 w-full sm:w-auto">
           <button
             type="button"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#164e32] hover:bg-[#123e28] text-white text-[13.5px] font-semibold shadow-sm transition-all cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-[#164e32] hover:bg-[#123e28] text-white text-[13.5px] font-semibold shadow-sm transition-all cursor-pointer"
           >
             <span className="text-[17px] font-bold leading-none">+</span>
             <span>Add Directive</span>
@@ -67,7 +67,7 @@ export default function DashboardPage() {
 
           <button
             type="button"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 border border-slate-900 text-[13.5px] font-semibold shadow-xs transition-all cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 border border-slate-900 text-[13.5px] font-semibold shadow-xs transition-all cursor-pointer"
           >
             <span>Export Data</span>
           </button>
@@ -75,11 +75,11 @@ export default function DashboardPage() {
       </section>
 
       {/* 2. 4 STAT CARDS ROW — Exactly matches Donezo Total/Ended/Running/Pending layout */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
         {/* Card 1: Total Campaigns — Hero Deep Forest Green Card */}
-        <div className="bg-[#164e32] p-5 rounded-[22px] text-white shadow-sm flex flex-col justify-between h-[175px] relative overflow-hidden">
+        <div className="bg-[#164e32] p-4 sm:p-5 rounded-[22px] text-white shadow-sm flex flex-col justify-between min-h-[165px] h-auto relative overflow-hidden">
           <div className="flex items-start justify-between">
-            <span className="text-[14px] font-medium text-white/90">Total Campaigns</span>
+            <span className="text-[13.5px] sm:text-[14px] font-medium text-white/90">Total Campaigns</span>
             {/* White circle with diagonal arrow ↗ */}
             <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 cursor-pointer shadow-xs">
               <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
@@ -89,8 +89,8 @@ export default function DashboardPage() {
           </div>
 
           <div>
-            <div className="text-[44px] font-bold tracking-tight text-white leading-none mb-3">24</div>
-            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/15 text-[11.5px] text-white font-normal">
+            <div className="text-[38px] sm:text-[44px] font-bold tracking-tight text-white leading-none mb-2.5 sm:mb-3">24</div>
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/15 text-[11px] sm:text-[11.5px] text-white font-normal">
               <span className="px-1 py-0.2 rounded bg-white/20 text-[10px] font-bold">5▲</span>
               <span>+18.4% from last month</span>
             </div>
@@ -98,9 +98,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 2: Completed Campaigns — Minimal White Card */}
-        <div className="bg-white p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between h-[175px]">
+        <div className="bg-white p-4 sm:p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[165px] h-auto">
           <div className="flex items-start justify-between">
-            <span className="text-[14px] font-medium text-slate-700">Completed Campaigns</span>
+            <span className="text-[13.5px] sm:text-[14px] font-medium text-slate-700">Completed Campaigns</span>
             <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
               <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
                 <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="#475569" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
@@ -109,8 +109,8 @@ export default function DashboardPage() {
           </div>
 
           <div>
-            <div className="text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-3">10</div>
-            <div className="inline-flex items-center gap-1.5 text-[11.5px] text-slate-400 font-normal">
+            <div className="text-[38px] sm:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-2.5 sm:mb-3">10</div>
+            <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-[11.5px] text-slate-400 font-normal">
               <span className="px-1 py-0.2 rounded border border-slate-200 text-slate-600 text-[10px] font-bold">6▲</span>
               <span>+12% from last month</span>
             </div>
@@ -118,9 +118,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 3: Active Campaigns — Minimal White Card */}
-        <div className="bg-white p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between h-[175px]">
+        <div className="bg-white p-4 sm:p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[165px] h-auto">
           <div className="flex items-start justify-between">
-            <span className="text-[14px] font-medium text-slate-700">Active Campaigns</span>
+            <span className="text-[13.5px] sm:text-[14px] font-medium text-slate-700">Active Campaigns</span>
             <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
               <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
                 <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="#475569" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
@@ -129,8 +129,8 @@ export default function DashboardPage() {
           </div>
 
           <div>
-            <div className="text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-3">12</div>
-            <div className="inline-flex items-center gap-1.5 text-[11.5px] text-slate-400 font-normal">
+            <div className="text-[38px] sm:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-2.5 sm:mb-3">12</div>
+            <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-[11.5px] text-slate-400 font-normal">
               <span className="px-1 py-0.2 rounded border border-slate-200 text-slate-600 text-[10px] font-bold">2▲</span>
               <span>In Flight · Day 14/30</span>
             </div>
@@ -138,9 +138,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Card 4: Pending Approval — Minimal White Card */}
-        <div className="bg-white p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between h-[175px]">
+        <div className="bg-white p-4 sm:p-5 rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[165px] h-auto">
           <div className="flex items-start justify-between">
-            <span className="text-[14px] font-medium text-slate-700">Pending Approval</span>
+            <span className="text-[13.5px] sm:text-[14px] font-medium text-slate-700">Pending Approval</span>
             <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center shrink-0 cursor-pointer">
               <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
                 <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="#475569" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
@@ -149,7 +149,7 @@ export default function DashboardPage() {
           </div>
 
           <div>
-            <div className="text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-3">4</div>
+            <div className="text-[38px] sm:text-[44px] font-bold tracking-tight text-slate-900 leading-none mb-2.5 sm:mb-3">4</div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/70 text-[11px] font-medium">
               Action Required
             </div>
@@ -158,21 +158,21 @@ export default function DashboardPage() {
       </section>
 
       {/* 3. MIDDLE ROW (3 Cards: Weekly Content Output / Next Scheduled Action / Recent Directives) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
         {/* ========================================================================= */}
         {/* Card 1: Weekly Content Output (lg:col-span-5) — Exact Capsule Bar Chart */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-5 bg-white rounded-[22px] border border-slate-200/80 p-5 shadow-xs flex flex-col justify-between">
+        <div className="col-span-1 md:col-span-2 lg:col-span-5 bg-white rounded-[22px] border border-slate-200/80 p-4 sm:p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[15px] font-bold text-slate-900">Weekly Content Output</h2>
             <span className="text-[11px] font-medium text-slate-400">Posts &amp; Assets / Day</span>
           </div>
 
-          {/* Capsule Bar Chart matching Donezo reference */}
-          <div className="relative w-full h-[195px] flex items-end justify-between px-2 pb-5">
+          {/* Capsule Bar Chart matching Donezo reference — fully responsive capsules */}
+          <div className="relative w-full h-[195px] flex items-end justify-between px-1 sm:px-2 pb-4 sm:pb-5">
             {/* Sun — Hatched (14 assets) */}
-            <div className="flex flex-col items-center gap-2 w-10">
-              <div className="relative w-9 h-[85px] rounded-full border border-slate-300 overflow-hidden">
+            <div className="flex-1 max-w-[38px] sm:max-w-[42px] flex flex-col items-center gap-2">
+              <div className="relative w-7 sm:w-8 md:w-9 h-[85px] rounded-full border border-slate-300 overflow-hidden">
                 <div
                   className="w-full h-full rounded-full"
                   style={{
@@ -184,30 +184,30 @@ export default function DashboardPage() {
             </div>
 
             {/* Mon — Solid Dark Green (28 assets) */}
-            <div className="flex flex-col items-center gap-2 w-10">
-              <div className="w-9 h-[120px] rounded-full bg-[#164e32]" />
+            <div className="flex-1 max-w-[38px] sm:max-w-[42px] flex flex-col items-center gap-2">
+              <div className="w-7 sm:w-8 md:w-9 h-[120px] rounded-full bg-[#164e32]" />
               <span className="text-[12px] font-semibold text-slate-400">M</span>
             </div>
 
             {/* Tue — Mint Green with floating "74%" Tooltip (24 assets) */}
-            <div className="flex flex-col items-center gap-2 w-10 relative">
-              <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#164e32] text-white text-[10.5px] font-bold px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap">
+            <div className="flex-1 max-w-[38px] sm:max-w-[42px] flex flex-col items-center gap-2 relative">
+              <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#164e32] text-white text-[10.5px] font-bold px-2 py-0.5 rounded-full shadow-sm whitespace-nowrap z-10">
                 74%
                 <div className="absolute left-1/2 -bottom-1 -translate-x-1/2 w-1.5 h-1.5 bg-[#164e32] rotate-45" />
               </div>
-              <div className="w-9 h-[100px] rounded-full bg-[#48a97c]" />
+              <div className="w-7 sm:w-8 md:w-9 h-[100px] rounded-full bg-[#48a97c]" />
               <span className="text-[12px] font-semibold text-slate-400">T</span>
             </div>
 
             {/* Wed — Peak Tall Dark Forest Green (38 assets) */}
-            <div className="flex flex-col items-center gap-2 w-10">
-              <div className="w-9 h-[155px] rounded-full bg-[#0e3b24]" />
+            <div className="flex-1 max-w-[38px] sm:max-w-[42px] flex flex-col items-center gap-2">
+              <div className="w-7 sm:w-8 md:w-9 h-[155px] rounded-full bg-[#0e3b24]" />
               <span className="text-[12px] font-semibold text-slate-400">W</span>
             </div>
 
             {/* Thu — Hatched (16 assets) */}
-            <div className="flex flex-col items-center gap-2 w-10">
-              <div className="relative w-9 h-[90px] rounded-full border border-slate-300 overflow-hidden">
+            <div className="flex-1 max-w-[38px] sm:max-w-[42px] flex flex-col items-center gap-2">
+              <div className="relative w-7 sm:w-8 md:w-9 h-[90px] rounded-full border border-slate-300 overflow-hidden">
                 <div
                   className="w-full h-full rounded-full"
                   style={{
@@ -219,8 +219,8 @@ export default function DashboardPage() {
             </div>
 
             {/* Fri — Hatched (22 assets) */}
-            <div className="flex flex-col items-center gap-2 w-10">
-              <div className="relative w-9 h-[110px] rounded-full border border-slate-300 overflow-hidden">
+            <div className="flex-1 max-w-[38px] sm:max-w-[42px] flex flex-col items-center gap-2">
+              <div className="relative w-7 sm:w-8 md:w-9 h-[110px] rounded-full border border-slate-300 overflow-hidden">
                 <div
                   className="w-full h-full rounded-full"
                   style={{
@@ -232,8 +232,8 @@ export default function DashboardPage() {
             </div>
 
             {/* Sat — Hatched (18 assets) */}
-            <div className="flex flex-col items-center gap-2 w-10">
-              <div className="relative w-9 h-[95px] rounded-full border border-slate-300 overflow-hidden">
+            <div className="flex-1 max-w-[38px] sm:max-w-[42px] flex flex-col items-center gap-2">
+              <div className="relative w-7 sm:w-8 md:w-9 h-[95px] rounded-full border border-slate-300 overflow-hidden">
                 <div
                   className="w-full h-full rounded-full"
                   style={{
@@ -249,14 +249,14 @@ export default function DashboardPage() {
         {/* ========================================================================= */}
         {/* Card 2: Next Scheduled Action (lg:col-span-3) — Reminder Card Style */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-3 bg-white rounded-[22px] border border-slate-200/80 p-5 shadow-xs flex flex-col justify-between">
+        <div className="col-span-1 md:col-span-1 lg:col-span-3 bg-white rounded-[22px] border border-slate-200/80 p-4 sm:p-5 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-[15px] font-bold text-slate-900">Next Scheduled Action</h2>
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             </div>
 
-            <p className="text-[17px] font-bold text-slate-900 leading-snug">
+            <p className="text-[16px] sm:text-[17px] font-bold text-slate-900 leading-snug">
               14:30 EST Meta Graph &amp; X Drop
             </p>
             <p className="text-[12px] text-slate-400 mt-1 mb-2">
@@ -280,7 +280,7 @@ export default function DashboardPage() {
         {/* ========================================================================= */}
         {/* Card 3: Recent Directives (lg:col-span-4) — Project List Style */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-4 bg-white rounded-[22px] border border-slate-200/80 p-5 shadow-xs flex flex-col justify-between">
+        <div className="col-span-1 md:col-span-1 lg:col-span-4 bg-white rounded-[22px] border border-slate-200/80 p-4 sm:p-5 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <h2 className="text-[15px] font-bold text-slate-900">Recent Directives</h2>
@@ -326,11 +326,11 @@ export default function DashboardPage() {
       </div>
 
       {/* 4. BOTTOM ROW (3 Cards: Specialist Agent Pods / Campaign Velocity / Swarm Orchestrator) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-5 items-stretch">
         {/* ========================================================================= */}
         {/* Card 1: Specialist Agent Pods (lg:col-span-5) — Team Collaboration Style */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-5 bg-white rounded-[22px] border border-slate-200/80 p-5 shadow-xs flex flex-col justify-between">
+        <div className="col-span-1 md:col-span-2 lg:col-span-5 bg-white rounded-[22px] border border-slate-200/80 p-4 sm:p-5 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
@@ -450,7 +450,7 @@ export default function DashboardPage() {
         {/* ========================================================================= */}
         {/* Card 2: Campaign Velocity (lg:col-span-3) — Exact Project Progress Gauge */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-3 bg-white rounded-[22px] border border-slate-200/80 p-5 shadow-xs flex flex-col justify-between">
+        <div className="col-span-1 md:col-span-1 lg:col-span-3 bg-white rounded-[22px] border border-slate-200/80 p-4 sm:p-5 shadow-xs flex flex-col justify-between">
           <h2 className="text-[15px] font-bold text-slate-900 mb-2">Campaign Velocity</h2>
 
           {/* Semicircle Gauge SVG */}
@@ -498,7 +498,7 @@ export default function DashboardPage() {
 
             {/* Center text: 57.1% Campaign Velocity */}
             <div className="absolute bottom-2 flex flex-col items-center">
-              <span className="text-[34px] font-bold text-slate-900 tracking-tight leading-none">
+              <span className="text-[32px] sm:text-[34px] font-bold text-slate-900 tracking-tight leading-none">
                 57.1%
               </span>
               <span className="text-[11.5px] text-slate-400 font-medium mt-1">
@@ -508,18 +508,18 @@ export default function DashboardPage() {
           </div>
 
           {/* Legend matching Donezo reference */}
-          <div className="flex items-center justify-center gap-3 text-[10.5px] font-medium text-slate-600 pt-3 border-t border-slate-100">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[10.5px] font-medium text-slate-600 pt-3 border-t border-slate-100">
             <div className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#164e32] inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#164e32] inline-block shrink-0" />
               <span>Dispatched (48%)</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#48a97c] inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#48a97c] inline-block shrink-0" />
               <span>Staged (20%)</span>
             </div>
             <div className="flex items-center gap-1">
               <span
-                className="w-2.5 h-2.5 rounded-xs inline-block border border-slate-300"
+                className="w-2.5 h-2.5 rounded-xs inline-block border border-slate-300 shrink-0"
                 style={{
                   backgroundImage: 'repeating-linear-gradient(45deg, #94a3b8 0, #94a3b8 1px, transparent 0, transparent 3px)',
                 }}
@@ -532,7 +532,7 @@ export default function DashboardPage() {
         {/* ========================================================================= */}
         {/* Card 3: Swarm Orchestrator (lg:col-span-4) — Time Tracker Card Style */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-4 bg-[#0b2014] rounded-[22px] p-5 text-white shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[175px]">
+        <div className="col-span-1 md:col-span-1 lg:col-span-4 bg-[#0b2014] rounded-[22px] p-4 sm:p-5 text-white shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[185px] h-auto">
           {/* 3D Green Waves Background */}
           <svg
             className="absolute inset-0 w-full h-full opacity-35 pointer-events-none"
@@ -557,7 +557,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Clean Monospace-Free Digital Status Readout */}
-            <div className="text-[34px] sm:text-[38px] font-bold text-white text-center tracking-normal my-3">
+            <div className="text-[32px] sm:text-[38px] font-bold text-white text-center tracking-normal my-3">
               {formatUptime(orchestratorSeconds)}
             </div>
             <p className="text-[11px] text-white/60 text-center font-normal">

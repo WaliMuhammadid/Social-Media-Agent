@@ -48,7 +48,7 @@ export default function CalendarPage() {
       </div>
 
       {/* Week Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
         {days.map((d) => (
           <Card key={d.date} className="p-4 bg-white border-gray-200 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div>

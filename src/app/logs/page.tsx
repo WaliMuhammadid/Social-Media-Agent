@@ -178,10 +178,10 @@ export default function EventLogsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0 pt-1">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 shrink-0 pt-1 w-full sm:w-auto">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-[13px] font-semibold shadow-xs transition-all cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-[13px] font-semibold shadow-xs transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">arrow_back</span>
             <span>Back to Dashboard</span>
@@ -189,7 +189,7 @@ export default function EventLogsPage() {
 
           <button
             type="button"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#164e32] hover:bg-[#123e28] text-white text-[13px] font-semibold shadow-sm transition-all cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#164e32] hover:bg-[#123e28] text-white text-[13px] font-semibold shadow-sm transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-[16px]">download</span>
             <span>Export Audit Log</span>

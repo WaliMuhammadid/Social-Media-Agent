@@ -49,8 +49,8 @@ export default function RootLayout({
               {/* Sticky Navbar */}
               <Navbar />
 
-              {/* Dashboard page content */}
-              <main className="w-full flex-1 p-5 sm:p-6 md:p-8 space-y-5 sm:space-y-6 overflow-x-hidden bg-[#f7f8fa]">
+              {/* Dashboard page content with adaptive responsive padding */}
+              <main className="w-full flex-1 p-3.5 sm:p-5 md:p-7 lg:p-8 space-y-4 sm:space-y-6 overflow-x-hidden bg-[#f7f8fa]">
                 {children}
               </main>
             </div>
