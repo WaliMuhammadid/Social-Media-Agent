@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TrendingUp, AlertOctagon, ShieldCheck, Cpu, ArrowUpRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
+import { ManagerMetric } from '@/types';
 import { mockManagerMetrics } from '@/lib/mockData';
 
 export const MetricsSummary: React.FC = () => {
+  const [metrics, setMetrics] = useState<ManagerMetric[]>(mockManagerMetrics);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/analytics/metrics')
+      .then(res => res.json())
+      .then(data => setMetrics(data))
+      .catch(err => console.error("Backend connection error:", err));
+  }, []);
+
   const metaThemes = [
     { icon: TrendingUp, accent: 'bg-blue-50 text-[#0064E0] border-blue-200' },
     { icon: AlertOctagon, accent: 'bg-amber-50 text-amber-700 border-amber-200' },
@@ -13,7 +23,7 @@ export const MetricsSummary: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-      {mockManagerMetrics.map((metric, idx) => {
+      {metrics.map((metric, idx) => {
         const theme = metaThemes[idx % metaThemes.length];
         const Icon = theme.icon;
 
