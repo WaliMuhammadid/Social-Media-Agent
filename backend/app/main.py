@@ -18,6 +18,8 @@ app.add_middleware(
 async def startup_event():
     # Initialize MongoDB and Beanie
     await init_db()
+    from .api.routes.realtime import start_realtime_ticker
+    await start_realtime_ticker()
 
 app.include_router(api_router)
 

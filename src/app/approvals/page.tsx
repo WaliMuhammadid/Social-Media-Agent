@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckSquare,
   AlertTriangle,
@@ -18,6 +18,9 @@ import {
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { api } from '@/lib/api';
+import { useWorkspace } from '@/context/WorkspaceContext';
+import { EmptyState } from '@/components/ui/ErrorState';
 
 interface ApprovalItem {
   id: string;
@@ -32,64 +35,42 @@ interface ApprovalItem {
   scheduledFor: string;
 }
 
-const initialApprovalItems: ApprovalItem[] = [
-  {
-    id: 'post-101',
-    title: 'Benchmark Comparison: Multi-Agent vs Monolithic LLMs',
-    hook: 'Why autonomous agent swarms achieve 4.2x higher throughput than single-model loops.',
-    content: 'Deep dive into our latest performance benchmarks showing how specialist pods prevent context poisoning. [Benchmark charts attached]',
-    platform: 'twitter',
-    creatorAgent: 'Copywriting Agent',
-    qualityAuditReason: 'Flagged: Slide 3 mentions an external benchmark citation requiring human verification.',
-    qualityScore: 82,
-    status: 'flagged',
-    scheduledFor: 'Tomorrow, 10:00 AM EST',
-  },
-  {
-    id: 'post-102',
-    title: 'LinkedIn Carousel: The 6 Pods Architecture',
-    hook: 'Inside our autonomous content engine: from Trend Research to Automated Quality Gates.',
-    content: '5-slide PDF carousel explaining how the Strategy Pod hands off to Creation Pod, followed by automated compliance auditing.',
-    platform: 'linkedin',
-    creatorAgent: 'Visual / Design Agent',
-    qualityAuditReason: 'All compliance checks passed. Meets brand voice guidelines (99.1% confidence).',
-    qualityScore: 99,
-    status: 'pending',
-    scheduledFor: 'Sep 13, 09:30 AM EST',
-  },
-  {
-    id: 'post-103',
-    title: 'Behind-the-Scenes: Prompt Tuning Workflow',
-    hook: 'How our Community Agent uses sentiment clustering to auto-tune weekly editorial hooks.',
-    content: 'A breakdown of the closed feedback loop connecting real-time X comment triage directly into the Strategy Pod.',
-    platform: 'twitter',
-    creatorAgent: 'Copywriting Agent',
-    qualityAuditReason: 'Factual verification passed. Readability score 8.4 grade level.',
-    qualityScore: 97,
-    status: 'pending',
-    scheduledFor: 'Sep 14, 02:00 PM EST',
-  },
-  {
-    id: 'post-104',
-    title: 'Infographic: Agent Pod Health & Token Budgeting',
-    hook: 'Managing 1M tokens/day with zero hallucinations: Our safety gate architecture.',
-    content: 'High-res visual breakdown showing token allocation across Gemini 1.5 Pro and Flash specialists.',
-    platform: 'instagram',
-    creatorAgent: 'Visual / Design Agent',
-    qualityAuditReason: 'Image asset aspect ratio verified (4:5). Color contrast conforms to AA guidelines.',
-    qualityScore: 96,
-    status: 'pending',
-    scheduledFor: 'Sep 15, 11:15 AM EST',
-  },
-];
-
 export default function ApprovalsPage() {
-  const [items, setItems] = useState<ApprovalItem[]>(initialApprovalItems);
+  const { currentWorkspace } = useWorkspace();
+  const [items, setItems] = useState<ApprovalItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [filterPlatform, setFilterPlatform] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [previewItem, setPreviewItem] = useState<ApprovalItem | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+
+  // Mandatory rejection notes modal state
+  const [rejectItem, setRejectItem] = useState<ApprovalItem | null>(null);
+  const [rejectNotes, setRejectNotes] = useState<string>('');
+  const [isSubmittingDecision, setIsSubmittingDecision] = useState<boolean>(false);
+
+  const loadApprovals = async () => {
+    try {
+      setIsLoading(true);
+      const data = await api.getApprovals(currentWorkspace?.slug);
+      setItems(
+        data.map((d: any) => ({
+          ...d,
+          platform: (d.platform?.toLowerCase() || 'twitter') as any,
+          status: d.status as any,
+        }))
+      );
+    } catch (err) {
+      console.error('Failed to load approvals:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadApprovals();
+  }, [currentWorkspace?.slug]);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -105,23 +86,47 @@ export default function ApprovalsPage() {
     );
   };
 
-  const updateStatus = (id: string, newStatus: ApprovalItem['status']) => {
-    setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
-    );
-    setFeedbackMessage(`Asset #${id} marked as ${newStatus.toUpperCase()}`);
-    setTimeout(() => setFeedbackMessage(null), 3000);
+  const handleDecision = async (
+    id: string,
+    decision: 'Approve' | 'Reject' | 'Escalate',
+    notes?: string
+  ) => {
+    try {
+      setIsSubmittingDecision(true);
+      await api.submitApprovalDecision(id, decision, notes);
+      
+      const newStatus = decision === 'Approve' ? 'approved' : decision === 'Reject' ? 'rejected' : 'flagged';
+      setItems((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, status: newStatus as any } : item))
+      );
+
+      setFeedbackMessage(`Asset #${id} marked as ${decision.toUpperCase()}! LangGraph stage updated.`);
+      setTimeout(() => setFeedbackMessage(null), 4000);
+      setRejectItem(null);
+      setRejectNotes('');
+    } catch (err: any) {
+      alert(`Decision failed: ${err.message}`);
+    } finally {
+      setIsSubmittingDecision(false);
+    }
   };
 
-  const handleBulkApprove = () => {
-    setItems((prev) =>
-      prev.map((item) =>
-        selectedIds.includes(item.id) ? { ...item, status: 'approved' } : item
-      )
-    );
-    setFeedbackMessage(`${selectedIds.length} assets approved for publishing!`);
-    setSelectedIds([]);
-    setTimeout(() => setFeedbackMessage(null), 3000);
+  const handleBulkApprove = async () => {
+    try {
+      for (const id of selectedIds) {
+        await api.submitApprovalDecision(id, 'Approve');
+      }
+      setItems((prev) =>
+        prev.map((item) =>
+          selectedIds.includes(item.id) ? { ...item, status: 'approved' } : item
+        )
+      );
+      setFeedbackMessage(`${selectedIds.length} assets approved for publishing!`);
+      setSelectedIds([]);
+      setTimeout(() => setFeedbackMessage(null), 3000);
+    } catch (err: any) {
+      alert(`Bulk approval failed: ${err.message}`);
+    }
   };
 
   const filteredItems = items.filter((item) => {
@@ -129,11 +134,12 @@ export default function ApprovalsPage() {
       filterPlatform === 'all' || item.platform === filterPlatform;
     const matchStatus =
       filterStatus === 'all' ||
-      (filterStatus === 'flagged' && item.status === 'flagged') ||
+      (filterStatus === 'flagged' && (item.status === 'flagged' || item.status === 'rejected')) ||
       (filterStatus === 'pending' && item.status === 'pending') ||
       (filterStatus === 'approved' && item.status === 'approved');
     return matchPlatform && matchStatus;
   });
+
 
   return (
     <div className="space-y-6 pb-12">
@@ -367,7 +373,7 @@ export default function ApprovalsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => updateStatus(item.id, 'approved')}
+                        onClick={() => handleDecision(item.id, 'Approve')}
                         className="text-green-700 hover:bg-green-50 hover:border-green-300"
                         title="Approve Post"
                       >
@@ -377,7 +383,10 @@ export default function ApprovalsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => updateStatus(item.id, 'flagged')}
+                        onClick={() => {
+                          setRejectItem(item);
+                          setRejectNotes('');
+                        }}
                         className="text-amber-700 hover:bg-amber-50"
                         title="Request Revision"
                       >
@@ -407,7 +416,7 @@ export default function ApprovalsPage() {
               </div>
               <button
                 onClick={() => setPreviewItem(null)}
-                className="text-gray-400 hover:text-gray-600 text-sm font-bold p-1"
+                className="text-gray-400 hover:text-gray-600 text-sm font-bold p-1 cursor-pointer"
               >
                 &times;
               </button>
@@ -422,7 +431,7 @@ export default function ApprovalsPage() {
 
             <div className="space-y-2">
               <div className="text-xs font-semibold text-gray-500">Post Draft:</div>
-              <p className="text-xs text-gray-700 p-3 rounded-lg bg-gray-50 border border-gray-200 leading-relaxed">
+              <p className="text-xs text-gray-700 p-3 rounded-lg bg-gray-50 border border-gray-200 leading-relaxed whitespace-pre-wrap">
                 {previewItem.content}
               </p>
             </div>
@@ -444,11 +453,76 @@ export default function ApprovalsPage() {
                 variant="primary"
                 size="sm"
                 onClick={() => {
-                  updateStatus(previewItem.id, 'approved');
+                  handleDecision(previewItem.id, 'Approve');
                   setPreviewItem(null);
                 }}
               >
                 Approve & Dispatch
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mandatory Rejection Notes Modal */}
+      {rejectItem && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="p-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-200">
+                  <AlertTriangle className="h-4 w-4" />
+                </span>
+                <div>
+                  <h3 className="text-sm font-bold text-gray-900">
+                    Revision / Rejection Reason
+                  </h3>
+                  <p className="text-[11px] text-gray-500">
+                    Asset #{rejectItem.id} — {rejectItem.title}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setRejectItem(null)}
+                className="text-gray-400 hover:text-gray-600 text-sm font-bold p-1 cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-600">
+              Rejection feedback is mandatory so the Creator and Quality pods understand what changes are required before re-submitting to the pipeline.
+            </p>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-gray-700">
+                Revision Notes <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={rejectNotes}
+                onChange={(e) => setRejectNotes(e.target.value)}
+                placeholder="e.g. Tone too informal; please add statistical citation regarding ROI metrics..."
+                rows={4}
+                className="w-full text-xs p-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0064E0] resize-none"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setRejectItem(null)}
+                disabled={isSubmittingDecision}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                disabled={!rejectNotes.trim() || isSubmittingDecision}
+                onClick={() => handleDecision(rejectItem.id, 'Reject', rejectNotes)}
+              >
+                {isSubmittingDecision ? 'Submitting...' : 'Reject Asset'}
               </Button>
             </div>
           </div>

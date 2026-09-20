@@ -25,6 +25,7 @@ export const Sidebar: React.FC = () => {
   ];
 
   const generalItems = [
+    { label: 'Integrations', href: '/settings/integrations', icon: 'hub' },
     { label: 'Settings', href: '#settings', icon: 'settings' },
     { label: 'Help', href: '#help', icon: 'help_outline' },
     { label: 'Logout', href: '#logout', icon: 'logout' },

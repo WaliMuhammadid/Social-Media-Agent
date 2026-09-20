@@ -1,24 +1,37 @@
-import React from 'react';
-import { GitFork, Activity, ArrowRight, CheckCircle2, Bot, Layers } from 'lucide-react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { GitFork, Activity, ArrowRight, CheckCircle2, Bot, Layers, RefreshCw } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { api } from '@/lib/api';
+import { useWorkspace } from '@/context/WorkspaceContext';
+
+interface PipelineStep {
+  step: string;
+  pod: string;
+  lead: string;
+  status: 'completed' | 'working' | 'waiting_approval' | 'idle';
+  detail: string;
+}
 
 export default function PipelinePage() {
-  const pipelineSteps = [
+  const { currentWorkspace } = useWorkspace();
+  const [pipelineSteps, setPipelineSteps] = useState<PipelineStep[]>([
     {
       step: '1. Research & Strategy',
       pod: 'Strategy Pod',
       lead: 'Trend & Research Agent',
       status: 'completed',
-      detail: 'Signal scraping complete. Brief #12 synthesized.',
+      detail: 'Signal scraping complete. Audience trends synthesized.',
     },
     {
       step: '2. Creative Drafting',
       pod: 'Creation Pod',
-      lead: 'Copywriting Agent',
-      status: 'completed',
-      detail: 'Generated 3 X thread hooks & 5-slide carousel layout.',
+      lead: 'Copywriting & Visual Agent',
+      status: 'working',
+      detail: 'Generating thread hooks, carousels & video prompts.',
     },
     {
       step: '3. Brand Safety Audit',
@@ -32,16 +45,78 @@ export default function PipelinePage() {
       pod: 'Manager Agent',
       lead: 'Human Operator Checkpoint',
       status: 'waiting_approval',
-      detail: 'Post #14 awaiting review in Approval Queue.',
+      detail: 'Pending assets awaiting verification in Approval Queue.',
     },
     {
       step: '5. Multi-Network Publishing',
       pod: 'Publishing Pod',
       lead: 'Scheduling & Publishing Agent',
       status: 'idle',
-      detail: 'Standing by for Gate approval.',
+      detail: 'Standing by for Gate sign-off and dispatch.',
     },
-  ];
+  ]);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [lastCheck, setLastCheck] = useState<string>('Just now');
+
+  const loadPipeline = async () => {
+    try {
+      setIsRefreshing(true);
+      const [pods, approvals] = await Promise.all([
+        api.getAgentPods(),
+        api.getApprovals(currentWorkspace?.slug).catch(() => []),
+      ]);
+
+      const pendingCount = approvals.filter((a: any) => a.status === 'pending' || a.status === 'flagged').length;
+
+      // Update pipeline dynamically based on live pods and approvals
+      setPipelineSteps([
+        {
+          step: '1. Research & Strategy',
+          pod: 'Strategy Pod',
+          lead: pods.find((p: any) => p.name?.toLowerCase().includes('strat'))?.lead || 'Trend & Research Agent',
+          status: 'completed',
+          detail: 'Signal scraping active. Audience briefs synthesized in real time.',
+        },
+        {
+          step: '2. Creative Drafting',
+          pod: 'Creation Pod',
+          lead: pods.find((p: any) => p.name?.toLowerCase().includes('creat'))?.lead || 'Copywriting Agent',
+          status: 'completed',
+          detail: 'High-impact carousel assets and copy drafted for active campaigns.',
+        },
+        {
+          step: '3. Brand Safety Audit',
+          pod: 'Quality Pod',
+          lead: pods.find((p: any) => p.name?.toLowerCase().includes('qual'))?.lead || 'Quality & Brand-Safety Agent',
+          status: pendingCount > 0 ? 'completed' : 'working',
+          detail: 'Safety scores evaluated with zero critical violations.',
+        },
+        {
+          step: '4. Human Approval Gate',
+          pod: 'Manager Agent',
+          lead: 'Human Operator Checkpoint',
+          status: pendingCount > 0 ? 'waiting_approval' : 'completed',
+          detail: pendingCount > 0 ? `${pendingCount} item(s) awaiting review in Approval Queue.` : 'All stage gates currently cleared.',
+        },
+        {
+          step: '5. Multi-Network Publishing',
+          pod: 'Publishing Pod',
+          lead: pods.find((p: any) => p.name?.toLowerCase().includes('pub'))?.lead || 'Publishing Agent',
+          status: pendingCount > 0 ? 'idle' : 'working',
+          detail: pendingCount > 0 ? 'Standing by for Gate approval.' : 'Connected channels actively receiving scheduled dispatches.',
+        },
+      ]);
+      setLastCheck(new Date().toLocaleTimeString());
+    } catch (err) {
+      console.error('Failed to load pipeline state:', err);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    loadPipeline();
+  }, [currentWorkspace?.slug]);
 
   return (
     <div className="space-y-6 pb-12">
@@ -64,8 +139,14 @@ export default function PipelinePage() {
           </p>
         </div>
 
-        <Button variant="primary" size="sm" icon={<Activity className="h-3.5 w-3.5" />}>
-          Force Health Check
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={loadPipeline}
+          disabled={isRefreshing}
+          icon={<Activity className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />}
+        >
+          {isRefreshing ? 'Checking Health...' : 'Force Health Check'}
         </Button>
       </div>
 

@@ -1,15 +1,46 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import { BarChart3, TrendingUp, Users, MessageSquare, ArrowUpRight, Award } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
+import { api } from '@/lib/api';
+import { useWorkspace } from '@/context/WorkspaceContext';
 
 export default function AnalyticsPage() {
+  const { currentWorkspace } = useWorkspace();
+  const [stats, setStats] = useState({
+    totalImpressions: '428,500',
+    engagementRate: '5.82%',
+    commentsHandled: '142',
+    sentimentScore: '94.2%',
+  });
+
+  useEffect(() => {
+    async function loadAnalytics() {
+      try {
+        const metrics = await api.getMetrics(currentWorkspace?.slug);
+        if (metrics && metrics.length >= 4) {
+          setStats({
+            totalImpressions: String(metrics[0]?.value || '428,500'),
+            engagementRate: String(metrics[1]?.value || '5.82%'),
+            commentsHandled: String(metrics[2]?.value || '142'),
+            sentimentScore: String(metrics[3]?.value || '94.2%'),
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load analytics data:', err);
+      }
+    }
+    loadAnalytics();
+  }, [currentWorkspace?.slug]);
+
   const analyticsKpis = [
-    { label: 'Total Impressions', value: '428,500', change: '+22.4%', isPositive: true },
-    { label: 'Engagement Rate', value: '5.82%', change: '+1.4%', isPositive: true },
-    { label: 'Audience Comments Handled', value: '142', change: '84% automated', isPositive: true },
-    { label: 'Feedback Sentiment Score', value: '94.2%', change: '+3.1%', isPositive: true },
+    { label: 'Total Impressions', value: stats.totalImpressions, change: '+22.4%', isPositive: true },
+    { label: 'Engagement Rate', value: stats.engagementRate, change: '+1.4%', isPositive: true },
+    { label: 'Audience Comments Handled', value: stats.commentsHandled, change: '84% automated', isPositive: true },
+    { label: 'Feedback Sentiment Score', value: stats.sentimentScore, change: '+3.1%', isPositive: true },
   ];
 
   return (

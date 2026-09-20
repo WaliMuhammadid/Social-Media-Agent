@@ -3,21 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { useSidebar } from '@/context/SidebarContext';
+import { useWorkspace } from '@/context/WorkspaceContext';
+import { useRealtime } from '@/context/RealtimeContext';
 
 export const Navbar: React.FC = () => {
   const { toggleSidebar } = useSidebar();
+  const { workspaces, currentWorkspace, selectWorkspace, currentUser } = useWorkspace();
+  const { isConnected, isReconnecting } = useRealtime();
 
   return (
-    /*
-      Donezo navbar:
-      - Pure white bg, no backdrop blur, no bottom shadow (just a very light border)
-      - Height 72px
-      - Left: search input (rounded-full, light border, magnifier + ⌘F chip)
-      - Right: mail icon → bell icon (with green dot) → divider → profile (circle photo + name + email)
-    */
     <header className="h-[68px] sm:h-[72px] flex items-center justify-between px-3.5 sm:px-6 bg-white border-b border-slate-100 sticky top-0 z-40 w-full shrink-0">
-
-      {/* Left: mobile toggle + search */}
+      {/* Left: mobile toggle + workspace switcher + search */}
       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0 mr-2 sm:mr-4">
         {/* Mobile hamburger */}
         <button
@@ -29,9 +25,30 @@ export const Navbar: React.FC = () => {
           <span className="material-symbols-outlined text-[22px]">menu</span>
         </button>
 
+        {/* Workspace Switcher Selector */}
+        <div className="relative hidden md:flex items-center">
+          <select
+            value={currentWorkspace?.slug || 'social-swarm-default'}
+            onChange={(e) => selectWorkspace(e.target.value)}
+            className="h-8 sm:h-9 bg-slate-50 border border-slate-200 text-slate-700 text-[11.5px] sm:text-[12.5px] font-semibold rounded-full pl-3 pr-8 focus:outline-none focus:border-[#164e32]/40 cursor-pointer appearance-none"
+            title="Switch Client Workspace"
+          >
+            {workspaces.map((ws) => (
+              <option key={ws.slug} value={ws.slug}>
+                🏢 {ws.name}
+              </option>
+            ))}
+          </select>
+          <span className="material-symbols-outlined absolute right-2.5 pointer-events-none text-slate-400 text-[14px]">
+            expand_more
+          </span>
+        </div>
+
         {/* Search — Donezo: rounded-full pill, light border, "Search directives..." */}
         <div className="relative w-full max-w-[180px] sm:max-w-xs block">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[16px] sm:text-[17px]">search</span>
+          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[16px] sm:text-[17px]">
+            search
+          </span>
           <input
             type="text"
             placeholder="Search tasks..."
@@ -45,10 +62,29 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Right: icons + profile */}
+      {/* Right: real-time indicator + mail + notification bell + user profile */}
       <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+        {/* Realtime Stream Status indicator */}
+        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all">
+          {isConnected ? (
+            <span className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50/80 px-2 py-0.5 rounded-full border border-emerald-200/60">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Live Stream
+            </span>
+          ) : isReconnecting ? (
+            <span className="flex items-center gap-1.5 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/70">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+              Reconnecting…
+            </span>
+          ) : (
+            <span className="flex items-center gap-1.5 text-slate-500 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-200">
+              <span className="w-2 h-2 rounded-full bg-slate-400" />
+              Connecting…
+            </span>
+          )}
+        </div>
 
-        {/* Mail icon — Donezo: plain icon, no circle background */}
+        {/* Mail icon */}
         <button
           type="button"
           className="text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
@@ -64,24 +100,28 @@ export const Navbar: React.FC = () => {
           title="Notifications"
         >
           <span className="material-symbols-outlined text-[22px]">notifications</span>
-          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#1a5c38] ring-2 ring-white"></span>
+          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#1a5c38] ring-2 ring-white" />
         </button>
 
         {/* Vertical divider */}
-        <div className="h-8 w-px bg-slate-100"></div>
+        <div className="h-8 w-px bg-slate-100" />
 
-        {/* Profile — Donezo: circle avatar, name bold, email small gray */}
-        <Link href="#profile" className="flex items-center gap-3 cursor-pointer select-none">
-          {/* Memoji Avatar matching Totok Michael in Donezo image */}
-          <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#fde68a] border border-amber-200 flex items-center justify-center text-[20px] shadow-xs">
-            🧔‍♂️
+        {/* Profile — Real authenticated user session */}
+        <div className="flex items-center gap-3 cursor-pointer select-none">
+          <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-[#eaf6ee] border border-emerald-200 flex items-center justify-center text-[20px] shadow-xs">
+            {currentUser?.avatar || '🚀'}
           </div>
           <div className="hidden lg:flex flex-col text-left">
-            <span className="text-[13.5px] font-bold text-slate-900 leading-tight">Totok Michael</span>
-            <span className="text-[11px] text-slate-400 leading-tight">tmichael20@mail.com</span>
+            <span className="text-[13.5px] font-bold text-slate-900 leading-tight">
+              {currentUser?.name || 'Admin Operator'}
+            </span>
+            <span className="text-[11px] text-slate-400 leading-tight">
+              {currentUser?.email || 'operator@socialswarm.ai'}
+            </span>
           </div>
-        </Link>
+        </div>
       </div>
     </header>
   );
 };
+

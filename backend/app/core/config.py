@@ -8,6 +8,11 @@ class Settings(BaseSettings):
     # API Keys
     ANTHROPIC_API_KEY: str = ""
     
+    # Facebook / Meta OAuth
+    FACEBOOK_APP_ID: str = ""
+    FACEBOOK_APP_SECRET: str = ""
+    FACEBOOK_REDIRECT_URI: str = "http://localhost:3001/settings/integrations/callback"
+    
     # Database
     MONGODB_URL: str = "mongodb://localhost:27017/social_agent"
     REDIS_URL: str = "redis://localhost:6379/0"

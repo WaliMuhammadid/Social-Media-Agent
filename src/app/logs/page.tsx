@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { api } from '@/lib/api';
+import { useWorkspace } from '@/context/WorkspaceContext';
+import { useRealtime } from '@/context/RealtimeContext';
 
 interface EventLog {
   id: string;
@@ -15,109 +18,134 @@ interface EventLog {
   time: string;
 }
 
-const initialLogs: EventLog[] = [
-  {
-    id: 'EVT-1094',
-    status: 'Pending Approval',
-    title: 'High-Impact Carousel Stage: AI Agent Autonomy Slide Deck',
-    description: 'Creation Pod completed 4 visual slides with Imagen 3. Safety score 98.4%. Requires human operator sign-off before dispatch.',
-    pod: 'Creation Pod',
-    podColor: 'bg-purple-50 text-purple-700 border-purple-200/60',
-    podIcon: 'brush',
-    agent: 'Agent-Creation-02',
-    time: '14:22:18 EST',
-  },
-  {
-    id: 'EVT-1093',
-    status: 'Complete',
-    title: 'Payload Dispatched: Tech Launch Announcement Thread',
-    description: 'Simultaneous distribution via Meta Graph and X APIs. Initial reach: 1,420 accounts in 120 seconds.',
-    pod: 'Publishing Pod',
-    podColor: 'bg-sky-50 text-sky-700 border-sky-200/60',
-    podIcon: 'cloud_upload',
-    agent: 'Agent-Publish-01',
-    time: '14:15:02 EST',
-  },
-  {
-    id: 'EVT-1092',
-    status: 'Safety Cleared',
-    title: 'Multi-Modal Brand Alignment Audit: Q3 Autonomous Tech',
-    description: 'Negative sentiment filter applied. Zero copyright or hallucination triggers detected across 4 assets.',
-    pod: 'Quality Pod',
-    podColor: 'bg-amber-50 text-amber-700 border-amber-200/70',
-    podIcon: 'verified',
-    agent: 'Agent-Audit-03',
-    time: '14:08:44 EST',
-  },
-  {
-    id: 'EVT-1091',
-    status: 'Auto-Approved',
-    title: 'Real-Time Audience Triage: 412 Comments Synthesized',
-    description: 'Positive engagement clustered around technical specifications. 14 high-value replies auto-drafted.',
-    pod: 'Engagement Pod',
-    podColor: 'bg-teal-50 text-teal-700 border-teal-200/60',
-    podIcon: 'forum',
-    agent: 'Agent-Interact-01',
-    time: '13:58:19 EST',
-  },
-  {
-    id: 'EVT-1090',
-    status: 'In Progress',
-    title: 'Cross-Network Viral Latency Optimization Benchmark',
-    description: 'Comparing organic reach curve against prior cohort. Strategy Pod adjusting dispatch frequency.',
-    pod: 'Strategy Pod',
-    podColor: 'bg-emerald-50 text-emerald-800 border-emerald-200/60',
-    podIcon: 'query_stats',
-    agent: 'Agent-Strategy-01',
-    time: '13:42:10 EST',
-  },
-  {
-    id: 'EVT-1089',
-    status: 'Complete',
-    title: 'Automated Token Refresh: LinkedIn OAuth v2 Handshake',
-    description: 'Session credentials validated with zero token drop. Refresh window extended by 60 days.',
-    pod: 'Publishing Pod',
-    podColor: 'bg-sky-50 text-sky-700 border-sky-200/60',
-    podIcon: 'cloud_upload',
-    agent: 'Agent-Publish-02',
-    time: '13:10:05 EST',
-  },
-  {
-    id: 'EVT-1088',
-    status: 'Safety Cleared',
-    title: 'Red-Teaming Prompt Injection Stress Test: Model Router v4',
-    description: '90 simulated jailbreak payloads executed against Claude 3.5 Sonnet router. Guardrails 100% intact.',
-    pod: 'Quality Pod',
-    podColor: 'bg-amber-50 text-amber-700 border-amber-200/70',
-    podIcon: 'verified',
-    agent: 'Agent-Audit-01',
-    time: '12:45:30 EST',
-  },
-];
-
 export default function EventLogsPage() {
+  const { currentWorkspace } = useWorkspace();
+  const { lastMessage } = useRealtime();
+
+  const [logs, setLogs] = useState<EventLog[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All Statuses');
   const [selectedPodFilter, setSelectedPodFilter] = useState('All Pods');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedLog, setSelectedLog] = useState<EventLog | null>(null);
 
-  const filteredLogs = initialLogs.filter((log) => {
-    const matchesQuery =
-      searchQuery === '' ||
+  const formatPodInfo = (podName: string) => {
+    const name = podName || 'Strategy Pod';
+    if (name.toLowerCase().includes('creat')) {
+      return { podColor: 'bg-purple-50 text-purple-700 border-purple-200/60', podIcon: 'brush' };
+    }
+    if (name.toLowerCase().includes('publish')) {
+      return { podColor: 'bg-sky-50 text-sky-700 border-sky-200/60', podIcon: 'cloud_upload' };
+    }
+    if (name.toLowerCase().includes('quality')) {
+      return { podColor: 'bg-amber-50 text-amber-700 border-amber-200/70', podIcon: 'verified' };
+    }
+    if (name.toLowerCase().includes('engage')) {
+      return { podColor: 'bg-teal-50 text-teal-700 border-teal-200/60', podIcon: 'forum' };
+    }
+    return { podColor: 'bg-emerald-50 text-emerald-800 border-emerald-200/60', podIcon: 'query_stats' };
+  };
+
+  const [kpiData, setKpiData] = useState<{
+    totalMutations: number;
+    auditRate: string;
+    pendingSignOff: number;
+    activePods: string;
+  }>({
+    totalMutations: 1482,
+    auditRate: '99.8%',
+    pendingSignOff: 4,
+    activePods: '6 / 6',
+  });
+
+  const fetchLogs = async () => {
+    try {
+      setIsLoading(true);
+      const podParam = selectedPodFilter !== 'All Pods' ? selectedPodFilter : undefined;
+      const statusParam = statusFilter !== 'All Statuses' ? statusFilter : undefined;
+      
+      const res = await api.getEventLogs({
+        page: currentPage,
+        limit: 10,
+        pod: podParam,
+        status: statusParam,
+        search: searchQuery || undefined,
+        workspace_slug: currentWorkspace?.slug,
+      });
+
+      const formatted: EventLog[] = (res.logs || []).map((item: any) => {
+        const podMeta = formatPodInfo(item.pod);
+        let displayStatus: EventLog['status'] = 'Complete';
+        const st = (item.status || '').toLowerCase();
+        if (st.includes('pending')) displayStatus = 'Pending Approval';
+        else if (st.includes('auto')) displayStatus = 'Auto-Approved';
+        else if (st.includes('safety') || st.includes('cleared')) displayStatus = 'Safety Cleared';
+        else if (st.includes('progress')) displayStatus = 'In Progress';
+
+        return {
+          id: item.id || `EVT-${Math.floor(Math.random() * 9000 + 1000)}`,
+          status: displayStatus,
+          title: item.title || 'System Event Dispatched',
+          description: item.description || '',
+          pod: item.pod || 'Publishing Pod',
+          podColor: item.podColor || podMeta.podColor,
+          podIcon: item.podIcon || podMeta.podIcon,
+          agent: item.agent || 'Agent-Runtime',
+          time: item.time || (item.timestamp ? new Date(item.timestamp).toLocaleTimeString() : 'Recent'),
+        };
+      });
+
+      setLogs(formatted);
+      setTotalCount(res.total || formatted.length);
+      setTotalPages(Math.max(1, Math.ceil((res.total || formatted.length) / (res.limit || 10))));
+      if (res.kpis) {
+        setKpiData(res.kpis);
+      }
+    } catch (err) {
+      console.error('Failed to fetch event logs:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLogs();
+  }, [currentWorkspace?.slug, currentPage, selectedPodFilter, statusFilter]);
+
+  // Listen to realtime websocket events and prepend new log
+  useEffect(() => {
+    if (lastMessage && (lastMessage.type === 'event_log' || lastMessage.type === 'approval_update')) {
+      const payload = lastMessage.data || lastMessage;
+      const podMeta = formatPodInfo(payload.pod || 'Publishing Pod');
+      const newEntry: EventLog = {
+        id: payload.id || `EVT-${Date.now().toString().slice(-4)}`,
+        status: payload.status || 'In Progress',
+        title: payload.title || payload.message || 'Realtime Pipeline Notification',
+        description: payload.description || payload.detail || `Event stream pushed update for ${payload.pod || 'system'}`,
+        pod: payload.pod || 'Publishing Pod',
+        podColor: podMeta.podColor,
+        podIcon: podMeta.podIcon,
+        agent: payload.agent || 'Live-Agent',
+        time: payload.time || new Date().toLocaleTimeString(),
+      };
+      setLogs((prev) => [newEntry, ...prev]);
+      setTotalCount((c) => c + 1);
+    }
+  }, [lastMessage]);
+
+  const filteredLogs = logs.filter((log) => {
+    if (!searchQuery) return true;
+    return (
       log.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       log.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       log.pod.toLowerCase().includes(searchQuery.toLowerCase()) ||
       log.agent.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.id.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesStatus =
-      statusFilter === 'All Statuses' || log.status === statusFilter;
-
-    const matchesPod =
-      selectedPodFilter === 'All Pods' || log.pod === selectedPodFilter;
-
-    return matchesQuery && matchesStatus && matchesPod;
+      log.id.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
 
   const getStatusBadge = (status: EventLog['status']) => {
@@ -201,25 +229,25 @@ export default function EventLogsPage() {
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[135px] sm:min-h-[160px] h-auto">
           <span className="text-[12px] sm:text-[13px] font-medium text-slate-500 leading-tight">Total Mutations</span>
-          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">1,482</div>
+          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">{kpiData.totalMutations.toLocaleString()}</div>
           <span className="text-[10px] sm:text-[11px] text-[#164e32] font-semibold truncate">+68 in 24 hours</span>
         </div>
 
         <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[135px] sm:min-h-[160px] h-auto">
           <span className="text-[12px] sm:text-[13px] font-medium text-slate-500 leading-tight">Audit Rate</span>
-          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">99.8%</div>
+          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">{kpiData.auditRate}</div>
           <span className="text-[10px] sm:text-[11px] text-[#164e32] font-semibold truncate">0 violations</span>
         </div>
 
         <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[135px] sm:min-h-[160px] h-auto">
           <span className="text-[12px] sm:text-[13px] font-medium text-slate-500 leading-tight">Pending Sign-off</span>
-          <div className="text-[26px] sm:text-[36px] font-bold text-amber-600 leading-none my-1.5 sm:my-2">4</div>
+          <div className="text-[26px] sm:text-[36px] font-bold text-amber-600 leading-none my-1.5 sm:my-2">{kpiData.pendingSignOff}</div>
           <span className="text-[10px] sm:text-[11px] text-amber-700 font-semibold truncate">Operator gate</span>
         </div>
 
         <div className="bg-white p-3.5 sm:p-5 rounded-[18px] sm:rounded-[22px] border border-slate-200/80 shadow-xs flex flex-col justify-between min-h-[135px] sm:min-h-[160px] h-auto">
           <span className="text-[12px] sm:text-[13px] font-medium text-slate-500 leading-tight">Active Pods</span>
-          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">6 / 6</div>
+          <div className="text-[26px] sm:text-[36px] font-bold text-slate-900 leading-none my-1.5 sm:my-2">{kpiData.activePods}</div>
           <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate">All telemetry ok</span>
         </div>
       </section>
@@ -354,10 +382,11 @@ export default function EventLogsPage() {
             >
               Prev
             </button>
-            <span className="px-2 font-medium text-slate-700">1 / 3</span>
+            <span className="px-2 font-medium text-slate-700">{currentPage} / {totalPages}</span>
             <button
-              onClick={() => setCurrentPage((p) => Math.min(3, p + 1))}
-              className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[12px] font-medium cursor-pointer"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-[12px] font-medium cursor-pointer disabled:opacity-40"
+              disabled={currentPage >= totalPages}
               type="button"
             >
               Next
